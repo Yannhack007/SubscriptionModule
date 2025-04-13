@@ -73,8 +73,8 @@ public class PromoCodeController {
     @Operation(
             summary = "Disable promotion code"
     )
-    public ResponseEntity<String> deletePromoCode(@PathVariable UUID promoCode) {
-        String message = promoCodeService.disablePromo(promoCode);
+    public ResponseEntity<String> deletePromoCode(@PathVariable UUID id) {
+        String message = promoCodeService.disablePromo(id);
         return ResponseEntity.ok(message);
     }
 
@@ -89,6 +89,13 @@ public class PromoCodeController {
     @Operation(summary = "Mark a promotion code as used")
     public ResponseEntity<String> markPromoCodeAsUsed(@PathVariable UUID id) {
         String message = promoCodeService.markAsUsed(id);
+        return ResponseEntity.ok(message);
+    }
+
+    @PutMapping("/active/{id}")
+    @Operation(summary = "Mark a promotion code as actived")
+    public ResponseEntity<String> markPromoCodeAsActived(@PathVariable UUID id) {
+        String message = promoCodeService.markAsActived(id);
         return ResponseEntity.ok(message);
     }
 }

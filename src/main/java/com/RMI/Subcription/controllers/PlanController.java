@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/plans")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @Tag(name = "Plan Controller", description = "APIs for managing plans")
 @Validated
 public class PlanController {
@@ -36,7 +36,7 @@ public class PlanController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get Plan By ID")
-    public ResponseEntity<PlanModel> getPlanById(@PathVariable UUID id) {
+    public ResponseEntity<PlanModel> getPlanById(@RequestParam UUID id) {
         return ResponseEntity.ok(planService.getPlanById(id));
     }
 
@@ -56,7 +56,15 @@ public class PlanController {
 
     @GetMapping("/category/{category}")
     @Operation(summary = "Get Plans By Category")
-    public ResponseEntity<List<PlanDTO>> getPlansByCategory(@PathVariable String category) {
+    public ResponseEntity<List<PlanDTO>> getPlansByCategory(@RequestParam String category) {
         return ResponseEntity.ok(planService.getByCategory(category));
+    }
+
+
+    @DeleteMapping("/{planId}")
+    @Operation(summary = "Delete Plan By ID")
+    public ResponseEntity<Void> deletePlan(@PathVariable UUID planId) {
+        planService.deletePlan(planId);
+        return ResponseEntity.noContent().build();
     }
 }

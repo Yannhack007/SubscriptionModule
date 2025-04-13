@@ -83,4 +83,15 @@ public class Promo_codeService {
         }
         return "Promo code not found.";
     }
+
+    public String markAsActived(UUID id) {
+        Optional<Promo_code> optionalPromo = promo.findById(id);
+        if (optionalPromo.isPresent()) {
+            Promo_code promoCode = optionalPromo.get();
+            promoCode.setStatus(PromoStatus.ACTIVE.name()); // Stocké sous forme de String
+            promo.save(promoCode);
+            return "The promo code " + promoCode.getCode() + " is now actived.";
+        }
+        return "Promo code not found.";
+    }
 }

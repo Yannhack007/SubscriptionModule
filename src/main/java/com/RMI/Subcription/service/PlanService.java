@@ -59,5 +59,13 @@ public class PlanService {
         return planRepository.save(existingPlan);
     }
 
+    public void deletePlan(UUID planId) {
+        PlanModel existingPlan = planRepository.findByPlanId(planId);
+        if (existingPlan == null) {
+            throw new ResourceNotFoundException("Plan with ID: " + planId+ " does not exist");
+        }
+        planRepository.deleteById(planId);
+    }
+
 
 }

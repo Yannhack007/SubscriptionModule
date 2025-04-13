@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/subscriptions")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/subscriptions")
+@CrossOrigin
 @Tag(name = "Subscription Controller", description = "APIs for managing subscriptions")
 @Validated
 public class SubscriptionController {
