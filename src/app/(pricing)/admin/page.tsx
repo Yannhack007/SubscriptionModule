@@ -1,23 +1,19 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 
 import { 
-  Users, CreditCard, Tag, Package, Plus, Search,
-  TrendingUp, ArrowUpRight, ArrowDownRight
+  Users, Tag, Package,
+  TrendingUp,LogOutIcon
 } from 'lucide-react';
-import OverviewTab from '../components/OverviewTab';
-import PlanManagement from '../components/PlanManagement';
-import PromoCodeManagement from '../components/PromoCodeManagement';
-import SubscriptionHistory from '../components/SubscriptionHistory';
+import { useAuth } from "@/app/(pricing)/context/AuthContext";
 
 
 const DashboardAdmin = () => {
   const [activeTab, setActiveTab] = useState('overview');
-
+  const {logout}=useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">
-    
       <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 p-4">
         <div className="mb-8">
           <h1 className="text-xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -65,10 +61,7 @@ const DashboardAdmin = () => {
           </button>
         </nav>
       </div>
-      {activeTab === 'overview' && <OverviewTab />}
-      {activeTab === 'plans' && <PlanManagement />}
-      {activeTab === 'promo' && <PromoCodeManagement />}
-      {activeTab === 'subscriptions' && <SubscriptionHistory />}
+
     </div>
   );
 };

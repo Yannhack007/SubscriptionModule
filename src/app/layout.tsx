@@ -1,40 +1,38 @@
-
+"use client";
 import "./globals.css";
 
 import "@public/styles/styles.scss";
 import "@public/styles/line-awesome.min.css";
-import {getLocale, getMessages} from 'next-intl/server';
-import {NextIntlClientProvider} from 'next-intl';
 import {Toaster} from "react-hot-toast";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/loading/spinner.css';
 import React from "react";
 import { CurrencyProvider } from "./(pricing)/context/CurrencyContext";
-import { ThemeProvider } from "./(pricing)/components/theme/ThemeProvider";
+import { ThemeProvider } from "../components/theme/ThemeProvider";
+import { AuthProvider } from "@/app/(pricing)/context/AuthContext";
 
 
-export default async function RootLayout({
+export default  function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const locale = await getLocale();
-    const messages = await getMessages();
     return (
-        <html lang={locale}>
+        <html >
         <body className="flex flex-col min-h-screen bg-[var(--bg-1)] text-[var(--neutral-700)]">
+        <AuthProvider>
             <ToastContainer />
             <Toaster toastOptions={{ duration: 4000 }} />
-                <NextIntlClientProvider messages={messages}>
                     <ThemeProvider>
                         <CurrencyProvider>
                             <main className="flex-grow min-h-[72vh]">
+                                
                                 {children}
                             </main>
                         </CurrencyProvider>
                     </ThemeProvider>
-                </NextIntlClientProvider>
+        </AuthProvider>
         </body>
         </html>
     );

@@ -23,6 +23,6 @@
       "@public/*": ["./public/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/others/CardSlider.jsx", "src/components/others/Header0.tsx", "src/app/api/ai/route.js", "src/app/(bookingpage)/detailpage/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

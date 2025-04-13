@@ -1,7 +1,7 @@
 "use client";
 //import Pagination from "@/components/vendor-dashboard/Pagination";
 //import Footer from "@/components/vendor-dashboard/Vendor.Footer";
-import { Payment } from "@/app/(pricing)/components/datas/types";
+import { Payment } from "@/components/datas/types";
 import { StarIcon } from "@heroicons/react/20/solid";
 import {
   TrashIcon
