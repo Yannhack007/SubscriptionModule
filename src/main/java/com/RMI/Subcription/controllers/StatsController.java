@@ -2,9 +2,8 @@ package com.RMI.Subcription.controllers;
 
 import com.RMI.Subcription.dto.DistributionResponseDTO;
 import com.RMI.Subcription.dto.SubscriptionResponseDTO;
-import com.RMI.Subcription.models.PlanModel;
-import com.RMI.Subcription.service.PlanService;
-import com.RMI.Subcription.service.SubscriptionService;
+import com.RMI.Subcription.service.impl.PlanService;
+import com.RMI.Subcription.service.impl.SubscriptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

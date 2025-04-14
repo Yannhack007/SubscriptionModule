@@ -2,7 +2,7 @@ package com.RMI.Subcription.controllers;
 
 import com.RMI.Subcription.dto.promoRequestDTO;
 import com.RMI.Subcription.models.Promo_code;
-import com.RMI.Subcription.service.Promo_codeService;
+import com.RMI.Subcription.service.impl.Promo_codeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

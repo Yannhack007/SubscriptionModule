@@ -31,7 +31,7 @@ public class PaymentController {
             @RequestBody PaymentRequest request) {
         try {
             PaymentResponse response = paymentServiceWebClient.post()
-                    .uri("/3qUkt_O1YcClmouM6_-W-dZ5bWdx13uf/payin")
+                    .uri("/payin")
                     .bodyValue(request)
                     .retrieve()
                     .bodyToMono(PaymentResponse.class)
@@ -55,7 +55,7 @@ public class PaymentController {
             statusRequest.setTransactionCode(transaction_code);
 
             PaymentStatusResponse response = paymentServiceWebClient.get()
-                    .uri("/3qUkt_O1YcClmouM6_-W-dZ5bWdx13uf/transactions/{transaction_code}/status", transaction_code)
+                    .uri("/transactions/{transaction_code}/status", transaction_code)
                     .retrieve()
                     .bodyToMono(PaymentStatusResponse.class)
                     .block(); // BLOQUANT

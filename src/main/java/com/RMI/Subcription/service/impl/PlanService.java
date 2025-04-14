@@ -1,11 +1,11 @@
-package com.RMI.Subcription.service;
+package com.RMI.Subcription.service.impl;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
 import com.RMI.Subcription.dto.PlanDTO;
 import com.RMI.Subcription.exceptions.ResourceNotFoundException;
+import com.RMI.Subcription.service.PlanInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Service
-public class PlanService {
+public class PlanService implements PlanInterface {
     @Autowired
     private PlanRepository planRepository;
     

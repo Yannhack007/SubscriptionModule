@@ -1,9 +1,10 @@
-package com.RMI.Subcription.service;
+package com.RMI.Subcription.service.impl;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.RMI.Subcription.dto.PaymentMethodDTO;
+import com.RMI.Subcription.service.PaymentInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Service
-public class PaymentService {
+public class PaymentService implements PaymentInterface {
     @Autowired
     private PaymentRepository paymentRepository;
 

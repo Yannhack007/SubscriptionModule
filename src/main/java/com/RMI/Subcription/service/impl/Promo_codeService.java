@@ -1,8 +1,9 @@
-package com.RMI.Subcription.service;
+package com.RMI.Subcription.service.impl;
 
 import java.util.*;
 
 import com.RMI.Subcription.dto.promoRequestDTO;
+import com.RMI.Subcription.service.PromoInterface;
 import com.RMI.Subcription.types.PromoStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Service
-public class Promo_codeService {
+public class Promo_codeService implements PromoInterface {
     @Autowired
     private Promo_codeRepository promo;
 

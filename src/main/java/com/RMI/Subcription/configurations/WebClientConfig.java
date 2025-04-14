@@ -15,7 +15,7 @@ public class WebClientConfig {
     @Bean
     public WebClient paymentServiceWebClient() {
         return WebClient.builder()
-                .baseUrl("https://gateway.yowyob.com/payment-service")
+                .baseUrl("https://gateway.yowyob.com/payment-service/ciOlTqLF7vUBv8jfTh9RfOLCKLiLngTw")
                 .build();
     }
 }

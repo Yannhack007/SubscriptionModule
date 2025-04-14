@@ -18,12 +18,12 @@
 //import com.RMI.Subcription.models.SubscriptionsModel;
 //import com.RMI.Subcription.models.Supermodel;
 //import com.RMI.Subcription.models.UserModel;
-//import com.RMI.Subcription.service.HistoryService;
-//import com.RMI.Subcription.service.PaymentService;
+//import com.RMI.Subcription.service.impl.HistoryService;
+//import com.RMI.Subcription.service.impl.PaymentService;
 //import com.RMI.Subcription.service.PlanDataService;
-//import com.RMI.Subcription.service.PlanService;
-//import com.RMI.Subcription.service.Promo_codeService;
-//import com.RMI.Subcription.service.SubscriptionService;
+//import com.RMI.Subcription.service.impl.PlanService;
+//import com.RMI.Subcription.service.impl.Promo_codeService;
+//import com.RMI.Subcription.service.impl.SubscriptionService;
 //import com.RMI.Subcription.service.UserService;
 //
 //import lombok.Getter;

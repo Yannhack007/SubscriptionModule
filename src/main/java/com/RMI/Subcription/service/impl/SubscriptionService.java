@@ -1,4 +1,4 @@
-package com.RMI.Subcription.service;
+package com.RMI.Subcription.service.impl;
 
 import com.RMI.Subcription.dto.SubscriptionRequestDTO;
 import com.RMI.Subcription.dto.SubscriptionResponseDTO;
@@ -10,6 +10,7 @@ import com.RMI.Subcription.helpers.SubscriptionHelper;
 import com.RMI.Subcription.models.HistoryModel;
 import com.RMI.Subcription.models.SubscriptionsModel;
 import com.RMI.Subcription.repositories.SubscriptionRepository;
+import com.RMI.Subcription.service.SubscriptionInterface;
 import com.RMI.Subcription.types.SubscriptionStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
-public class SubscriptionService {
+public class SubscriptionService implements SubscriptionInterface {
 
     private final PaymentService paymentService;
     private final HistoryService historyService;

@@ -2,7 +2,7 @@ package com.RMI.Subcription.controllers;
 
 import com.RMI.Subcription.dto.SubscriptionRequestDTO;
 import com.RMI.Subcription.dto.SubscriptionResponseDTO;
-import com.RMI.Subcription.service.*;
+import com.RMI.Subcription.service.impl.SubscriptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
