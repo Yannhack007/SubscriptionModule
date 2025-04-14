@@ -1,9 +1,5 @@
 "use client";
 import _features from "@/components/datas/features";
-import axios, { AxiosResponse } from "axios";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import PlanRecap from "@/components/PlanRecap";
 import BillingAddress from "@/components/BillingAddress";
