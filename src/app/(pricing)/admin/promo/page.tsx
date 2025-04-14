@@ -47,7 +47,7 @@ interface FilterState {
   };
 }
 
-const PromoCodeManagement = () => {
+const Page = () => {
   const [promoCodes, setPromoCodes] = useState<PromoCode[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedPromo, setSelectedPromo] = useState<PromoCode | null>(null);
@@ -435,4 +435,4 @@ const PromoCodeManagement = () => {
   );
 };
 
-export default PromoCodeManagement;
+export default Page;

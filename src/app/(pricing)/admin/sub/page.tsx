@@ -56,7 +56,7 @@ interface FilterState {
   paymentMethod: string[];
 }
 
-const SubscriptionHistory = () => {
+const Page = () => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([
     // {
     //   subscriptionId: "sub_001",
@@ -453,4 +453,4 @@ const SubscriptionHistory = () => {
   );
 };
 
-export default SubscriptionHistory;
+export default Page;

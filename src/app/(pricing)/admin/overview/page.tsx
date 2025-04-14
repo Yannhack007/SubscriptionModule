@@ -33,7 +33,7 @@ export interface Plan {
   updatedAt: string;
 }
 
-const OverviewTab = () => {
+const Page = () => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [planDetails, setPlanDetails] = useState<Plan[]>([]);
   const [activeSub, setActive] = useState(0)
@@ -260,4 +260,4 @@ const OverviewTab = () => {
   )
 }
 
-export default OverviewTab
+export default Page

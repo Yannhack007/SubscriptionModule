@@ -4,10 +4,12 @@ import { BillAddress } from '@/data/Structure';
 import { ChangeEvent, useEffect, useState } from "react";
 import { useCurrency } from '../app/(pricing)/context/CurrencyContext';
 import AddressSelector from './AddressSelector';
+import { useSearchParams } from 'next/navigation';
 
 const BillingAddress = () => {
-    const storedPlan = sessionStorage.getItem("selectedPlan");
-    const plan = storedPlan ? JSON.parse(storedPlan) : null;
+    const searchParams = useSearchParams();
+    const data = searchParams.get("data");
+    const plan = data ? JSON.parse(data) : null;
 
     const {
         currency,
@@ -38,7 +40,7 @@ const BillingAddress = () => {
             </h4>
             <div className="flex flex-wrap gap-4 justify-between items-center">
                 <p className="mb-0">
-                    
+
                     <span className="text-primary"></span>
                 </p>
                 <p className="mb-0">

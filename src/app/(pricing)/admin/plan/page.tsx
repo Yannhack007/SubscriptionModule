@@ -37,7 +37,7 @@ interface HistoryEntry {
   changes: Record<string, any>;
 }
 
-const PlanManagement = () => {
+const Page = () => {
   const [plans, setPlans] = useState<Plan[]>([
   ]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -320,4 +320,4 @@ const PlanManagement = () => {
 
 
 
-export default PlanManagement;
+export default Page;

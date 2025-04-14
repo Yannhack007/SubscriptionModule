@@ -5,12 +5,10 @@ import {
   Users, Tag, Package,
   TrendingUp,LogOutIcon
 } from 'lucide-react';
-import { useAuth } from "@/app/(pricing)/context/AuthContext";
 
 
 const DashboardAdmin = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const {logout}=useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">

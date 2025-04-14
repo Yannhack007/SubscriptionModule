@@ -48,10 +48,12 @@ const Page = () => {
     }, [])
 
     const handleClick = (plan: Plan) => {
-        setLoading(true)
-        sessionStorage.setItem("selectedPlan", JSON.stringify(plan));
-        router.push("/payment-method");
-    };
+        const query = new URLSearchParams({
+          data: JSON.stringify(plan)
+        }).toString();
+        router.push(`/payment-method?${query}`);
+      };
+      
 
 
     return (

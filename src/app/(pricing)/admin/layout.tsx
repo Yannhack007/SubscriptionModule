@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Header from "@/components/Header";
+//import Header from "@/components/Header";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const [activeTab, setActiveTab] = useState("overview");
@@ -30,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <>
             <ToastContainer />
             <Toaster toastOptions={{ duration: 4000 }} />
-            <Header />
 
             <div className="lg:hidden flex items-center justify-between p-4 border-b bg-white sticky top-0 z-30">
                 <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>

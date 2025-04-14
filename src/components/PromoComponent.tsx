@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useState } from 'react'
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const PromoComponent = () => {
   const [loading, setLoading] = useState(false);
-
+  const router=useRouter()
   const [promocode, setPromocode] = useState("");
   const [message, setMessage] = useState("")
   const [promo_discount, setPromo_discount] = useState(0)
@@ -22,13 +23,20 @@ const PromoComponent = () => {
 
       if (res) {
         setPromo_discount(res.discount);
+
         await axios.put(process.env.SERVER_URL + '/promocodes/use/' + res.id);
-        sessionStorage.setItem("promo", res.code);
-        sessionStorage.setItem("discount", res.discount);
+
+        const query = new URLSearchParams({
+          code: JSON.stringify(res.code),
+          discount:JSON.stringify(res.discount)
+        }).toString();
+
         window.dispatchEvent(new Event("promo-applied"));
+        router.replace(`/payment-method?${query}`);
       } else {
         setMessage(promocode === "" ? "Enter a code" : "Invalid or used promo code");
       }
+
     } catch (error) {
       console.log(error);
       setMessage("An error occurred. Please try again.");
@@ -54,7 +62,7 @@ const PromoComponent = () => {
             className="w-full border-0 bg-transparent text-[var(--neutral-700)] px-3 py-1 ::placeholder-neutral-600 focus:outline-none"
           />
           {loading ? (
-            <div className="custom_loader_ring"/>
+            <div className="custom_loader_ring" />
           ) : (
             <button
               type="button"

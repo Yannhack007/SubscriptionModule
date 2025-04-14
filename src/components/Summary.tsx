@@ -1,18 +1,20 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useCurrency } from '../app/(pricing)/context/CurrencyContext';
+import { useSearchParams } from 'next/navigation';
 
 
 const Summary = () => {
-  const storedPlan = sessionStorage.getItem("selectedPlan");
-  const plan = storedPlan ? JSON.parse(storedPlan) : null;
+  const searchParams = useSearchParams();
+  const data = searchParams.get("data");
+  const plan = data ? JSON.parse(data) : null;
   const [promoDiscount, setPromoDiscount] = useState(0);
 
   useEffect(() => {
-    const storedDiscount = sessionStorage.getItem("discount");
+    const storedDiscount = searchParams.get("discount");
     setPromoDiscount(storedDiscount ? Number(storedDiscount) : 0);
     const handlePromoUpdate = () => {
-      const updatedDiscount = sessionStorage.getItem("discount");
+      const updatedDiscount = searchParams.get("discount");
       setPromoDiscount(updatedDiscount ? Number(updatedDiscount) : 0);
     };
 

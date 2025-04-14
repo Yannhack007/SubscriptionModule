@@ -10,6 +10,8 @@ import '@/styles/loading/spinner.css';
 import React from "react";
 import { CurrencyProvider } from "./(pricing)/context/CurrencyContext";
 import { ThemeProvider } from "../components/theme/ThemeProvider";
+import { Suspense } from 'react';
+import LoaderOverlay from "@/components/LoaderOverlay";
 //import { AuthProvider } from "@/app/(pricing)/context/AuthContext";
 
 
@@ -26,10 +28,12 @@ export default function RootLayout({
                 <Toaster toastOptions={{ duration: 4000 }} />
                 <ThemeProvider>
                     <CurrencyProvider>
-                        <main className="flex-grow min-h-[72vh]">
+                        <Suspense fallback={<LoaderOverlay/>}>
+                            <main className="flex-grow min-h-[72vh]">
 
-                            {children}
-                        </main>
+                                {children}
+                            </main>
+                        </Suspense>
                     </CurrencyProvider>
                 </ThemeProvider>
             </body>
