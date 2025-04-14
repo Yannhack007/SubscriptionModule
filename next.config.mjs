@@ -23,7 +23,7 @@ const nextConfig = {
     }
   },
   env:{
-    SERVER_URL:"http://localhost:5000/api"
+    SERVER_URL:"https://827e-129-0-60-43.ngrok-free.app/api"
   }
 };
 
