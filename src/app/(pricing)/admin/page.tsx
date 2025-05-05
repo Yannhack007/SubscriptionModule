@@ -5,6 +5,10 @@ import {
   Users, Tag, Package,
   TrendingUp,LogOutIcon
 } from 'lucide-react';
+import OverviewTab from './overview/page';
+import PlanManagement from './plan/page';
+import Page from './promo/page';
+import PageSub from './sub/page';
 
 
 const DashboardAdmin = () => {
@@ -58,6 +62,12 @@ const DashboardAdmin = () => {
             <span>Subscriptions</span>
           </button>
         </nav>
+      </div>
+      <div>
+        {activeTab ==='overview' && (<OverviewTab/>)}
+        {activeTab ==='plans' && (<PlanManagement/>)}
+        {activeTab ==='promo' && (<Page/>)}
+        {activeTab ==='subscriptions' && (<PageSub/>)}
       </div>
 
     </div>

@@ -20,9 +20,9 @@ import {
   LineChart,
   Line,
 } from 'recharts';
-import { 
+import {
   ChevronDown, Download, Search, Filter, Eye,
-  TrendingUp, Users, CreditCard, CheckCircle, Calendar 
+  TrendingUp, Users, CreditCard, CheckCircle, Calendar
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
@@ -30,7 +30,11 @@ import { enUS, fr } from 'date-fns/locale';
 import { SubscriptionDetailModal } from '@/components/modals/SubscriptionDetailModal';
 import { FilterModal } from '@/components/modals/FilterModalSubscription';
 import { exportToCSV } from '../../../../components/utils/CSVutils';
-import {toast} from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
+import EmptyJumbotron from '@/components/EmptyJumbotron';
+import LoaderOverlay from '@/components/LoaderOverlay';
+
 
 interface Subscription {
   subscriptionId: string;
@@ -129,6 +133,7 @@ const Page = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [loading, setLoading] = useState(false)
   const [filters, setFilters] = useState<FilterState>({
     status: [],
     dateRange: { start: null, end: null },
@@ -234,195 +239,224 @@ const Page = () => {
     { month: 'Jun', actives: 220, new: 55, cancelled: 35 },
   ];
 
+  const fetchSubscription = async () => {
+    setLoading(true)
+    try {
+      await axios.get(process.env.SERVER_URL + '/subscriptions')
+        .then((response) => {
+          console.log(response.data);
+          setSubscriptions(response.data);
+        })
+    } catch (error) {
+      console.error();
+
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchSubscription();
+  }, [])
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6 pl-6">
-        <h2 className="text-2xl font-bold text-gray-800">Subscriptions history</h2>
-        <div className="flex space-x-4">
-          <div className="relative">
-            <input
-              type="text"
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              placeholder="Search..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+    <div className="px-4 sm:px-6 md:px-8 py-6">
+      {loading ? (<LoaderOverlay />) : (
+        <div>
+          <div className="flex justify-between items-center mb-6 pl-6">
+            <h2 className="text-2xl font-bold text-gray-800">Subscriptions history</h2>
+            <div className="flex space-x-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={globalFilter}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  placeholder="Search..."
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+                <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+              </div>
+              <button
+                onClick={() => setIsFilterModalOpen(true)}
+                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                <Filter size={20} />
+                <span>Filters</span>
+              </button>
+              <button
+                onClick={() => {
+                  if (subscriptions.length <= 0) return toast.error('No plans to export');
+                  exportToCSV({ data: subscriptions, filename: 'subscriptions' })
+                }}
+                className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              >
+                <Download size={20} />
+                <span>Export</span>
+              </button>
+            </div>
           </div>
-          <button
-            onClick={() => setIsFilterModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-          >
-            <Filter size={20} />
-            <span>Filters</span>
-          </button>
-          <button
-            onClick={()=> 
-              {if(subscriptions.length <= 0) return toast.error('No plans to export');
-                exportToCSV({ data: subscriptions, filename: 'subscriptions' })}}
-            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-          >
-            <Download size={20} />
-            <span>Export</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 mb-6 ml-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center justify-between">
+          {subscriptions.length === 0 ? (<EmptyJumbotron />) : (
             <div>
-              <p className="text-sm text-gray-500">Actives Subscriptions</p>
-              <p className="text-2xl font-bold text-green-600">230</p>
-            </div>
-            <div className="h-12 w-12 bg-green-50 rounded-full flex items-center justify-center">
-              <Users className="text-green-600" size={24} />
-            </div>
-          </div>
-          <div className="mt-2 flex items-center text-sm">
-            <TrendingUp className="text-green-500 mr-1" size={16} />
-            <span className="text-green-500">+5.2%</span>
-            <span className="text-gray-500 ml-1">vs last month</span>
-          </div>
-        </div>
+              <div className="grid grid-cols-3 gap-4 mb-6 ml-6">
+                <div className="bg-white p-4 rounded-lg shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500">Actives Subscriptions</p>
+                      <p className="text-2xl font-bold text-green-600">230</p>
+                    </div>
+                    <div className="h-12 w-12 bg-green-50 rounded-full flex items-center justify-center">
+                      <Users className="text-green-600" size={24} />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center text-sm">
+                    <TrendingUp className="text-green-500 mr-1" size={16} />
+                    <span className="text-green-500">+5.2%</span>
+                    <span className="text-gray-500 ml-1">vs last month</span>
+                  </div>
+                </div>
 
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Monthly Income</p>
-              <p className="text-2xl font-bold text-blue-600">4,250 xaf</p>
+                <div className="bg-white p-4 rounded-lg shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500">Monthly Income</p>
+                      <p className="text-2xl font-bold text-blue-600">4,250 xaf</p>
+                    </div>
+                    <div className="h-12 w-12 bg-blue-50 rounded-full flex items-center justify-center">
+                      <CreditCard className="text-blue-600" size={24} />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center text-sm">
+                    <TrendingUp className="text-green-500 mr-1" size={16} />
+                    <span className="text-green-500">+8.1%</span>
+                    <span className="text-gray-500 ml-1">vs last month</span>
+                  </div>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500">Average Duration</p>
+                      <p className="text-2xl font-bold text-orange-600">8.5 months</p>
+                    </div>
+                    <div className="h-12 w-12 bg-orange-50 rounded-full flex items-center justify-center">
+                      <Calendar className="text-orange-600" size={24} />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center text-sm">
+                    <TrendingUp className="text-green-500 mr-1" size={16} />
+                    <span className="text-green-500">+0.8%</span>
+                    <span className="text-gray-500 ml-1">vs last month</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 mb-6 ml-6">
+                <div className="bg-white p-4 rounded-lg shadow">
+                  <h3 className="text-lg font-semibold mb-4">Monthly Incomes</h3>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={revenueData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="revenue" fill="#0066FF" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg shadow">
+                  <h3 className="text-lg font-semibold mb-4">Subscription Trends</h3>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={subscriptionTrends}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Line type="monotone" dataKey="actives" stroke="#0066FF" />
+                        <Line type="monotone" dataKey="new" stroke="#00CC88" />
+                        <Line type="monotone" dataKey="cancelled" stroke="#FF4444" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow overflow-hidden ml-6 ">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    {table.getHeaderGroups().map(headerGroup => (
+                      <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header => (
+                          <th
+                            key={header.id}
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          >
+                            {header.isPlaceholder ? null : (
+                              <div
+                                className={`flex items-center space-x-2 ${header.column.getCanSort() ? 'cursor-pointer select-none' : ''
+                                  }`}
+                                onClick={header.column.getToggleSortingHandler()}
+                              >
+                                <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
+                                {header.column.getCanSort() && (
+                                  <ChevronDown size={16} className="text-gray-400" />
+                                )}
+                              </div>
+                            )}
+                          </th>
+                        ))}
+                      </tr>
+                    ))}
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {table.getRowModel().rows.map(row => (
+                      <tr key={row.id} className="hover:bg-gray-50">
+                        {row.getVisibleCells().map(cell => (
+                          <td key={cell.id} className="px-6 py-4 whitespace-nowrap">
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+
+                <div className="px-6 py-4 flex items-center justify-between border-t border-gray-200">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-700">
+                      Page{' '}
+                      <span className="font-medium">{table.getState().pagination.pageIndex + 1}</span> on{' '}
+                      <span className="font-medium">{table.getPageCount()}</span>
+                    </span>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => table.previousPage()}
+                      disabled={!table.getCanPreviousPage()}
+                      className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => table.nextPage()}
+                      disabled={!table.getCanNextPage()}
+                      className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="h-12 w-12 bg-blue-50 rounded-full flex items-center justify-center">
-              <CreditCard className="text-blue-600" size={24} />
-            </div>
-          </div>
-          <div className="mt-2 flex items-center text-sm">
-            <TrendingUp className="text-green-500 mr-1" size={16} />
-            <span className="text-green-500">+8.1%</span>
-            <span className="text-gray-500 ml-1">vs last month</span>
-          </div>
-        </div>
+          )}
 
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Average Duration</p>
-              <p className="text-2xl font-bold text-orange-600">8.5 months</p>
-            </div>
-            <div className="h-12 w-12 bg-orange-50 rounded-full flex items-center justify-center">
-              <Calendar className="text-orange-600" size={24} />
-            </div>
-          </div>
-          <div className="mt-2 flex items-center text-sm">
-            <TrendingUp className="text-green-500 mr-1" size={16} />
-            <span className="text-green-500">+0.8%</span>
-            <span className="text-gray-500 ml-1">vs last month</span>
-          </div>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-6 ml-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Monthly Incomes</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="revenue" fill="#0066FF" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
         </div>
-
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Subscription Trends</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={subscriptionTrends}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="actives" stroke="#0066FF" />
-                <Line type="monotone" dataKey="new" stroke="#00CC88" />
-                <Line type="monotone" dataKey="cancelled" stroke="#FF4444" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden ml-6 ">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    key={header.id}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={`flex items-center space-x-2 ${
-                          header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-                        }`}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
-                        {header.column.getCanSort() && (
-                          <ChevronDown size={16} className="text-gray-400" />
-                        )}
-                      </div>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id} className="hover:bg-gray-50">
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} className="px-6 py-4 whitespace-nowrap">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        
-        <div className="px-6 py-4 flex items-center justify-between border-t border-gray-200">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-700">
-              Page{' '}
-              <span className="font-medium">{table.getState().pagination.pageIndex + 1}</span> on{' '}
-              <span className="font-medium">{table.getPageCount()}</span>
-            </span>
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Modals */}
       <AnimatePresence>
