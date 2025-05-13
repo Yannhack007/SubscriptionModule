@@ -20,7 +20,7 @@ import { enUS, fr } from 'date-fns/locale';
 import { toast } from 'react-hot-toast';
 import { PromoFormModal } from '@/components/modals/PromoFormModal';
 import { FilterModal } from '@/components/modals/FilterModalPromo';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import LoaderOverlay from '@/components/LoaderOverlay';
 import EmptyJumbotron from '@/components/EmptyJumbotron';
 
@@ -61,6 +61,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false)
   const columnHelper = createColumnHelper<PromoCode>();
   const [action, setActions] = useState(false)
+  const [loadingStatus, setLoadingStatus] = useState("")
 
   const fetchPromoCodes = async () => {
     setLoading(true)
@@ -72,7 +73,10 @@ const Page = () => {
           setPromoCodes(response.data);
         })
     } catch (error) {
-      console.error(error);
+
+      const axiosError = error as AxiosError;
+      setLoadingStatus(axiosError.code || "UNKNOWN_ERROR");
+      console.error(axiosError);
 
     } finally {
       setLoading(false)
@@ -100,6 +104,9 @@ const Page = () => {
       setPromoCodes((prev) => prev.map((p) => (p.id === promo.id ? { ...p, status: p.status === 'ACTIVE' ? 'DISABLED' : 'ACTIVE' } : p)));
       fetchPromoCodes();
     } catch (error) {
+      const axiosError = error as AxiosError;
+      setLoadingStatus(axiosError.code || "UNKNOWN_ERROR");
+      console.error(axiosError); 
       console.error('Error updating promo code status:', error);
     } finally {
       setActions(false)
@@ -118,6 +125,9 @@ const Page = () => {
       });
       fetchPromoCodes();
     } catch (error) {
+      const axiosError = error as AxiosError;
+      setLoadingStatus(axiosError.code || "UNKNOWN_ERROR");
+      console.error(axiosError);
       console.error('Error updating promo code status:', error);
     } finally {
       setActions(false)
@@ -311,7 +321,7 @@ const Page = () => {
             </div>
           </div>
 
-          {promoCodes.length === 0 ? (<EmptyJumbotron />) : (
+          {promoCodes.length === 0 ? (<EmptyJumbotron code={loadingStatus} />) : (
             <div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 sm:ml-6">
                 <div className="bg-white p-4 rounded-lg shadow">

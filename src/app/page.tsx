@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Plan } from "@/app/(pricing)/admin/plan/page";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import LoaderOverlay from "@/components/LoaderOverlay";
 import EmptyJumbotron from "@/components/EmptyJumbotron";
@@ -15,6 +15,7 @@ import EmptyJumbotron from "@/components/EmptyJumbotron";
 const Page = () => {
     const [activeButton, setActiveButton] = useState(1);
     const [loading, setLoading] = useState(false)
+    const [loadingStatus, setLoadingStatus] = useState("")
 
     const router = useRouter()
 
@@ -36,8 +37,9 @@ const Page = () => {
                     setPlans(response.data);
                 })
         } catch (error) {
-            console.error(error);
-
+            const axiosError = error as AxiosError;
+            setLoadingStatus(axiosError.code || "UNKNOWN_ERROR");
+            console.error(axiosError);
         } finally {
             setLoading(false)
         }
@@ -49,11 +51,11 @@ const Page = () => {
 
     const handleClick = (plan: Plan) => {
         const query = new URLSearchParams({
-          data: JSON.stringify(plan)
+            data: JSON.stringify(plan)
         }).toString();
         router.push(`/payment-method?${query}`);
-      };
-      
+    };
+
 
 
     return (
@@ -61,7 +63,7 @@ const Page = () => {
             <div className="py-[10px] lg:py-[25px] text bg-[var(--bg-2)] overflow-hidden px-3">
                 {loading ? (<LoaderOverlay />) : (
                     <div>
-                        {plans.length === 0 ? (<EmptyJumbotron />) : (
+                        {plans.length === 0 ? (<EmptyJumbotron code={loadingStatus} />) : (
                             <div>
                                 <div className="max-w-[570px] mx-auto flex flex-col items-center text-center">
                                     <SubHeadingBtn

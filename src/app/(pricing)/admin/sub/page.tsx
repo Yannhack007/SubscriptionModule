@@ -31,7 +31,7 @@ import { SubscriptionDetailModal } from '@/components/modals/SubscriptionDetailM
 import { FilterModal } from '@/components/modals/FilterModalSubscription';
 import { exportToCSV } from '../../../../components/utils/CSVutils';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import EmptyJumbotron from '@/components/EmptyJumbotron';
 import LoaderOverlay from '@/components/LoaderOverlay';
 
@@ -134,6 +134,7 @@ const Page = () => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [loading, setLoading] = useState(false)
+  const [loadingStatus, setLoadingStatus] = useState("")
   const [filters, setFilters] = useState<FilterState>({
     status: [],
     dateRange: { start: null, end: null },
@@ -154,7 +155,10 @@ const Page = () => {
     }),
     columnHelper.accessor('amount', {
       header: 'Amount',
-      cell: (info) => <span>{info.getValue().toFixed(2)} €</span>,
+      cell: (info) => {
+        const amount = info.getValue();
+        return <span>{typeof amount === 'number' ? amount.toFixed(2) : '0.00'} €</span>;
+      },
     }),
     columnHelper.accessor('paymentDate', {
       header: 'Payment Date',
@@ -248,7 +252,9 @@ const Page = () => {
           setSubscriptions(response.data);
         })
     } catch (error) {
-      console.error();
+      const axiosError = error as AxiosError;
+      setLoadingStatus(axiosError.code || "UNKNOWN_ERROR");
+      console.error(axiosError);
 
     } finally {
       setLoading(false)
@@ -295,7 +301,7 @@ const Page = () => {
               </button>
             </div>
           </div>
-          {subscriptions.length === 0 ? (<EmptyJumbotron />) : (
+          {subscriptions.length === 0 ? (<EmptyJumbotron code={loadingStatus} />) : (
             <div>
               <div className="grid grid-cols-3 gap-4 mb-6 ml-6">
                 <div className="bg-white p-4 rounded-lg shadow">

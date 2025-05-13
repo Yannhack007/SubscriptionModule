@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { format } from 'date-fns';
-import {enUS, fr } from 'date-fns/locale';
+import { enUS, fr } from 'date-fns/locale';
 
 interface Subscription {
   subscriptionId: string;
@@ -56,7 +56,10 @@ export const SubscriptionDetailModal: React.FC<{
             </div>
             <div>
               <h3 className="text-sm text-gray-500">Amount</h3>
-              <p className="font-medium">{subscription.amount.toFixed(2)} €</p>
+              <p className="font-medium">
+                {typeof subscription.amount === 'number' ? subscription.amount.toFixed(2) : '0.00'} €
+              </p>
+
             </div>
           </div>
 

@@ -15,7 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PlanFormModal from '@/components/modals/PlanFormModal';
 import { toast } from 'react-hot-toast';
 import { exportToCSV } from '@/components/utils/CSVutils';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import EmptyJumbotron from '@/components/EmptyJumbotron';
 import LoaderOverlay from '@/components/LoaderOverlay';
 
@@ -44,7 +44,8 @@ const PlanManagement = () => {
   const [isConfirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | undefined>();
   const [globalFilter, setGlobalFilter] = useState('');
-  const [loading, setLoading] = useState(false) 
+  const [loading, setLoading] = useState(false)
+  const [loadingStatus, setLoadingStatus] = useState("")
 
   const columnHelper = createColumnHelper<Plan>();
 
@@ -62,7 +63,9 @@ const PlanManagement = () => {
           setPlans(response.data);
         })
     } catch (error) {
-      console.error();
+      const axiosError = error as AxiosError;
+      setLoadingStatus(axiosError.code || "UNKNOWN_ERROR");
+      console.error(axiosError);
 
     } finally {
       setLoading(false)
@@ -89,6 +92,9 @@ const PlanManagement = () => {
       fetchPlans();
       toast.success('Plan deleted successfully');
     } catch (error) {
+      const axiosError = error as AxiosError;
+      setLoadingStatus(axiosError.code || "UNKNOWN_ERROR");
+      console.error(axiosError);
       toast.error('Error deleting plan');
     } finally {
       setLoading(false)
@@ -115,7 +121,10 @@ const PlanManagement = () => {
     }),
     columnHelper.accessor('amount', {
       header: 'Amount',
-      cell: (info) => <span>{info.getValue().toFixed(2)} €</span>,
+      cell: (info) => {
+        const amount = info.getValue();
+        return <span>{typeof amount === 'number' ? amount.toFixed(2) : '0.00'} €</span>;
+      },
     }),
     columnHelper.accessor('duration', {
       header: 'Duration (month)',
@@ -192,7 +201,7 @@ const PlanManagement = () => {
               </button>
             </div>
           </div>
-          {plans.length === 0 ? (<EmptyJumbotron />) : (
+          {plans.length === 0 ? (<EmptyJumbotron code={loadingStatus} />) : (
             <div className="bg-white rounded-lg shadow overflow-x-auto ml-0 sm:ml-6">
               <table className="w-full">
                 <thead className="bg-gray-50">
